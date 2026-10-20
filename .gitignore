@@ -26,3 +26,23 @@ frontend/tsconfig.app.tsbuildinfo
 
 # Claude Code workspace
 .claude/
+
+# LaTeX build artifacts (report/); main.pdf is kept as the deliverable
+report/build.log
+report/*.aux
+report/*.log
+report/*.fls
+report/*.fdb_latexmk
+report/*.out
+report/*.toc
+report/*.lof
+report/*.lot
+report/*.xdv
+report/*.synctex.gz
+report/*.bbl
+report/*.blg
+
+# draw.io backups and the generator's check output
+report/figures/**/*.bkp
+report/figures/**/.$*
+report/figures/png/check.json
