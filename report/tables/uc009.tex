@@ -1,0 +1,21 @@
+\begin{usecase}{UC009}{Assign Delivery}
+\ucrow{Actor}{Manager (within the assigned branch), Admin}
+\ucrow{Usage}{Assign a shipper of the same branch to a ready delivery order, or reassign the delivery to another shipper, for example after a failed attempt.}
+\ucrow{Activation Event}{The Manager opens the deliveries screen and chooses a shipper for a delivery.}
+\ucrow{Preconditions}{The Manager or Admin is signed in. The related order uses delivery and has status ready (UC008, or a failed delivery in UC005).}
+\ucflowhead
+\ucstep{1}{Manager}{Open the deliveries screen.}
+\ucstep{2}{System}{Display the deliveries in scope (the Manager's branch, or all branches for Admin) with their status and shipper.}
+\ucstep{3}{Manager}{Select a delivery and choose an active shipper.}
+\ucstep{4}{System}{Check that the delivery is in the Manager's branch, that the order is a ready delivery order and that the selected employee is an active shipper of the same branch.}
+\ucstep{5}{System}{Set the shipper and the status assigned, record the assignment time, the status history and an audit log entry (assigned or reassigned).}
+\ucstep{6}{System}{Display the updated delivery; it now appears in the shipper's list (UC005).}
+\ucflowend
+\ucalthead
+\ucalt{E1}{4}{The delivery belongs to a branch other than the Manager's.}{Access is denied and the use case ends.}
+\ucalt{E2}{4}{The order is not a ready delivery order.}{The system rejects the assignment and the use case ends.}
+\ucalt{E3}{4}{The employee is not an active shipper or belongs to another branch.}{The system rejects the assignment; the Manager chooses another shipper (step 3).}
+\ucflowend
+\ucrow{Postconditions}{The delivery is assigned to one shipper of the order's branch, and the change is recorded in the delivery history and the audit log.}
+\ucrow{Business Rules}{A Manager acts only within the assigned branch. Reassignment uses the same checks and sets the delivery back to assigned.}
+\end{usecase}

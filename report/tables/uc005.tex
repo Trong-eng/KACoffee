@@ -1,0 +1,28 @@
+\begin{usecase}{UC005}{Update Delivery Status}
+\ucrow{Actor}{Shipper}
+\ucrow{Usage}{Allow the assigned shipper to record the progress of a delivery from pickup at the store to a successful or failed outcome, keeping the related order consistent.}
+\ucrow{Activation Event}{The Shipper opens the list of assigned deliveries and acts on one of them.}
+\ucrow{Preconditions}{The Shipper is signed in. To update a delivery, it must be assigned to this shipper (UC009) and be in a status that allows the action. The related order stays in the ready status while it is being delivered.}
+\ucflowhead
+\ucstep{1}{Shipper}{Open the deliveries list.}
+\ucstep{2}{System}{Display the deliveries assigned to this shipper with the address, item summary and current status.}
+\ucstep{3}{Shipper}{Collect the order at the store and confirm pickup for an assigned delivery.}
+\ucstep{4}{System}{Check the assignment and status, set the delivery to picked up and record the time and status history.}
+\ucstep{5}{Shipper}{Confirm the start of the delivery.}
+\ucstep{6}{System}{Set the delivery to delivering and record the time and status history.}
+\ucstep{7}{Shipper}{Hand over the order, collect the offline payment and confirm successful delivery.}
+\ucstep{8}{System}{Set the delivery to delivered, set the related order to completed and its payment to paid, and record the status history.}
+\ucstep{9}{System}{Extension point \emph{Award Loyalty Points}: if the order belongs to a member and no points have been awarded yet, credit the points and upgrade the membership rank when a threshold is reached.}
+\ucstep{10}{System}{Display the updated delivery.}
+\ucflowend
+\ucalthead
+\ucalt{A1}{2}{No assigned deliveries.}{The system shows an empty list and the use case ends.}
+\ucalt{A2}{3, 5}{Shortened path.}{The system also accepts starting the delivery directly from assigned (step 5) and confirming success directly from picked up (step 7).}
+\ucalt{A3}{3, 5 or 7}{The order cannot be delivered, e.g. the customer is absent or the address is wrong.}{The Shipper enters a failure reason and reports a failed delivery. The system sets the delivery to failed, keeps the order in the ready status, records the reason in the delivery history and notifies the member, if any. The use case ends; reassignment is handled in UC009.}
+\ucalt{E1}{4, 6, 8}{The delivery is not assigned to this shipper.}{Access is denied and the use case ends.}
+\ucalt{E2}{4, 6, 8}{The action is not allowed from the current status.}{The system rejects the update; the delivery keeps its status and the Shipper chooses an allowed action.}
+\ucalt{E3}{in A3}{No failure reason is entered.}{The system asks for a reason (1--255 characters); the Shipper enters it and A3 continues.}
+\ucflowend
+\ucrow{Postconditions}{Every change is stored in the delivery status history. Delivered: the order is completed and paid, and member points are credited once. Failed: the order remains ready and is available for follow-up and reassignment (UC009).}
+\ucrow{Business Rules}{Delivery lifecycle: pending assignment $\rightarrow$ assigned $\rightarrow$ picked up $\rightarrow$ delivering $\rightarrow$ delivered, or failed from assigned, picked up or delivering. Intermediate delivery states do not change the order status. Points = floor(eligible amount / 1,000), where the eligible amount is the value of non-free items after discount, excluding the delivery fee. Thresholds: Silver 100, Gold 300, Diamond 700.}
+\end{usecase}

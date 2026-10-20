@@ -1,0 +1,34 @@
+\section{Introduction}
+
+\subsection{Problem Definition}
+
+A coffee chain receives orders through several channels: its website, the counter of each branch and the telephone. Each order must reach the correct branch, retain the customer's drink choices and be updated as staff prepare it. Delivery orders also require a clear handover between store staff and the assigned shipper, so that responsibility for the order is clear at each stage.
+
+When order records, customer information and promotion rules are managed separately, staff may need to enter the same information more than once. This creates opportunities for incorrect prices, missed order updates and inconsistent loyalty points. For example, points may be credited twice for one order, or not at all after a delivery is completed. Branch managers also need a shared view of completed sales and outstanding deliveries to coordinate daily operations, but such a view is difficult to build when each channel keeps its own records.
+
+These difficulties increase with the number of branches and channels, because policies, order updates and sales figures must stay consistent across all of them.
+
+The KACoffee project addresses these problems by bringing these activities into one system. Its initial focus is the transaction flow from account registration and order creation to preparation, collection or delivery, and completion.
+
+\subsection{Proposed Solution}
+
+To address the issues above, KACoffee is proposed as a web application that connects customer ordering with counter sales, delivery and branch management. The system will offer:
+
+\begin{itemize}
+  \item \textbf{Public website:} Visitors can browse the public menu and register as a customer with a phone number.
+  \item \textbf{Customer area:} Signed-in customers can place online orders for store pickup or delivery, review their orders and view their membership rank, points and notifications.
+  \item \textbf{Staff interface:} Staff can create staff-assisted orders for walk-in customers and telephone callers, look up members by phone number, update preparation status and process bottle exchanges within their branch.
+  \item \textbf{Shipper interface:} Shippers can view the deliveries assigned to them and record pickup, delivery progress and a successful or failed outcome.
+  \item \textbf{Administration area:} Branch managers supervise orders, deliveries, reports and permitted employee records within their branch, while administrators manage system-wide products, branches, employee accounts, discount codes, settings and reports.
+\end{itemize}
+
+Each authenticated user will have an individual account and access appropriate to their role. A central database will keep product information, orders, customer membership records and promotion rules consistent across branches. The system will also keep records of important business actions for traceability.
+
+The project objectives are to:
+
+\begin{itemize}
+  \item Provide a consistent ordering process across online, counter and telephone channels.
+  \item Make responsibility and status visible throughout order preparation and delivery.
+  \item Apply membership and discount rules consistently while protecting access to customer and branch data.
+  \item Deliver an integrated application, supporting design documents and a demonstration of the five selected use cases.
+\end{itemize}

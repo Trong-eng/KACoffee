@@ -1,0 +1,24 @@
+\begin{usecase}{UC010}{Process Bottle Exchange}
+\ucrow{Actor}{Staff (Manager and Admin may also use this function). Supporting participant: Store Customer.}
+\ucrow{Usage}{Record the exchange of returned bottles for eligible bottled products, for a member or an unregistered customer.}
+\ucrow{Activation Event}{A customer brings returned bottles to the counter and Staff opens the bottle exchange screen.}
+\ucrow{Preconditions}{Staff is signed in and assigned to a branch. At least one active bottled product exists.}
+\ucflowhead
+\ucstep{1}{Store Customer}{Hand over the returned bottles.}
+\ucstep{2}{Staff}{Open the bottle exchange screen.}
+\ucstep{3}{System}{Display the bottled products eligible as rewards.}
+\ucstep{4}{Staff}{Enter the number of returned bottles, choose the reward product and optionally enter the member's phone number and a note.}
+\ucstep{5}{Staff}{Submit the exchange.}
+\ucstep{6}{System}{Check that the number of bottles is a positive multiple of five, that the reward product is an active bottled product and that the member exists if a phone number was entered.}
+\ucstep{7}{System}{Calculate the reward quantity (one product for every five bottles) and record the exchange with the branch, the staff member and the member, if any.}
+\ucstep{8}{System}{Display the recorded exchange with the reward quantity.}
+\ucstep{9}{Staff}{Hand the reward products to the customer.}
+\ucflowend
+\ucalthead
+\ucalt{E1}{6}{The number of bottles is not a positive multiple of five.}{The system rejects the exchange; Staff corrects the quantity (step 4).}
+\ucalt{E2}{6}{No member has the phone number entered.}{The system reports that the member was not found; Staff corrects or clears the phone number (step 4).}
+\ucalt{E3}{6}{The reward product is not an active bottled product.}{The system rejects the exchange; Staff chooses another product (step 4).}
+\ucflowend
+\ucrow{Postconditions}{An exchange record exists for the branch with the returned quantity, reward product and quantity, the processing employee and the member, if identified; an audit log entry is stored.}
+\ucrow{Business Rules}{Reward quantity = returned bottles / 5; for example 10 bottles give 2 products, while 7 bottles are rejected. Exchanges do not award loyalty points.}
+\end{usecase}

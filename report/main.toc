@@ -1,0 +1,46 @@
+\contentsline {section}{\numberline {1}Introduction}{2}{section.1}%
+\contentsline {subsection}{\numberline {1.1}Problem Definition}{2}{subsection.1.1}%
+\contentsline {subsection}{\numberline {1.2}Proposed Solution}{2}{subsection.1.2}%
+\contentsline {section}{\numberline {2}Planning}{3}{section.2}%
+\contentsline {subsection}{\numberline {2.1}Motivation}{3}{subsection.2.1}%
+\contentsline {subsection}{\numberline {2.2}Initial System Request}{3}{subsection.2.2}%
+\contentsline {subsubsection}{\numberline {2.2.1}Business Need}{3}{subsubsection.2.2.1}%
+\contentsline {subsubsection}{\numberline {2.2.2}Business Requirements}{4}{subsubsection.2.2.2}%
+\contentsline {subsubsection}{\numberline {2.2.3}Business Value}{6}{subsubsection.2.2.3}%
+\contentsline {subsubsection}{\numberline {2.2.4}Special Issues or Constraints}{6}{subsubsection.2.2.4}%
+\contentsline {subsection}{\numberline {2.3}Feasibility Analysis}{6}{subsection.2.3}%
+\contentsline {subsubsection}{\numberline {2.3.1}Technical Feasibility}{7}{subsubsection.2.3.1}%
+\contentsline {subsubsection}{\numberline {2.3.2}Operational Feasibility}{9}{subsubsection.2.3.2}%
+\contentsline {subsubsection}{\numberline {2.3.3}Economic Feasibility}{9}{subsubsection.2.3.3}%
+\contentsline {subsubsection}{\numberline {2.3.4}Legal \& Regulatory Feasibility}{9}{subsubsection.2.3.4}%
+\contentsline {subsubsection}{\numberline {2.3.5}Market Feasibility}{9}{subsubsection.2.3.5}%
+\contentsline {subsection}{\numberline {2.4}Initial Project Plan}{10}{subsection.2.4}%
+\contentsline {subsubsection}{\numberline {2.4.1}Project Scope Estimation}{10}{subsubsection.2.4.1}%
+\contentsline {paragraph}{\numberline {2.4.1.1}Scope Size:}{10}{paragraph.2.4.1.1}%
+\contentsline {paragraph}{\numberline {2.4.1.2}Time Estimate:}{11}{paragraph.2.4.1.2}%
+\contentsline {subsubsection}{\numberline {2.4.2}Staffing Plan}{11}{subsubsection.2.4.2}%
+\contentsline {subsubsection}{\numberline {2.4.3}CASE Tools}{13}{subsubsection.2.4.3}%
+\contentsline {section}{\numberline {3}Analysis}{13}{section.3}%
+\contentsline {subsection}{\numberline {3.1}General Use Case Diagram}{13}{subsection.3.1}%
+\contentsline {subsection}{\numberline {3.2}Use Case Details}{16}{subsection.3.2}%
+\contentsline {subsubsection}{\numberline {3.2.1}Guest's and Common Use Cases}{17}{subsubsection.3.2.1}%
+\contentsline {subsubsection}{\numberline {3.2.2}Customer's Use Cases}{20}{subsubsection.3.2.2}%
+\contentsline {subsubsection}{\numberline {3.2.3}Staff's Use Cases}{22}{subsubsection.3.2.3}%
+\contentsline {subsubsection}{\numberline {3.2.4}Shipper's Use Cases}{27}{subsubsection.3.2.4}%
+\contentsline {subsubsection}{\numberline {3.2.5}Manager's and Admin's Use Cases}{30}{subsubsection.3.2.5}%
+\contentsline {subsection}{\numberline {3.3}Activity Diagram}{33}{subsection.3.3}%
+\contentsline {subsubsection}{\numberline {3.3.1}Guest's and Common Use Cases}{33}{subsubsection.3.3.1}%
+\contentsline {paragraph}{\numberline {3.3.1.1}UC001: Register as Customer}{33}{paragraph.3.3.1.1}%
+\contentsline {paragraph}{\numberline {3.3.1.2}UC006: Log In}{34}{paragraph.3.3.1.2}%
+\contentsline {paragraph}{\numberline {3.3.1.3}UC007: Log Out}{35}{paragraph.3.3.1.3}%
+\contentsline {subsubsection}{\numberline {3.3.2}Customer's Use Cases}{36}{subsubsection.3.3.2}%
+\contentsline {paragraph}{\numberline {3.3.2.1}UC002: Place Online Order}{36}{paragraph.3.3.2.1}%
+\contentsline {subsubsection}{\numberline {3.3.3}Staff's Use Cases}{37}{subsubsection.3.3.3}%
+\contentsline {paragraph}{\numberline {3.3.3.1}UC003: Create Staff-Assisted Order}{37}{paragraph.3.3.3.1}%
+\contentsline {paragraph}{\numberline {3.3.3.2}UC008: Update Store Order Status}{38}{paragraph.3.3.3.2}%
+\contentsline {paragraph}{\numberline {3.3.3.3}UC010: Process Bottle Exchange}{39}{paragraph.3.3.3.3}%
+\contentsline {subsubsection}{\numberline {3.3.4}Shipper's Use Cases}{40}{subsubsection.3.3.4}%
+\contentsline {paragraph}{\numberline {3.3.4.1}UC005: Update Delivery Status}{40}{paragraph.3.3.4.1}%
+\contentsline {subsubsection}{\numberline {3.3.5}Manager's and Admin's Use Cases}{41}{subsubsection.3.3.5}%
+\contentsline {paragraph}{\numberline {3.3.5.1}UC009: Assign Delivery}{41}{paragraph.3.3.5.1}%
+\contentsline {paragraph}{\numberline {3.3.5.2}UC004: Manage Discount Codes}{42}{paragraph.3.3.5.2}%

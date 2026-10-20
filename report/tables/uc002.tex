@@ -1,0 +1,30 @@
+\begin{usecase}{UC002}{Place Online Order}
+\ucrow{Actor}{Customer}
+\ucrow{Usage}{Allow a signed-in customer to turn the prepared cart into an online order for store pickup or delivery, optionally applying a discount code.}
+\ucrow{Activation Event}{The Customer selects ``Checkout'' from the cart.}
+\ucrow{Preconditions}{The Customer is signed in. The cart contains at least one product with the chosen size, ice and sugar options.}
+\ucflowhead
+\ucstep{1}{Customer}{Review the cart and select ``Checkout''.}
+\ucstep{2}{System}{Present the checkout form with the active branches, the fulfilment methods and the order summary.}
+\ucstep{3}{Customer}{Select a branch and a fulfilment method (store pickup or delivery) and enter the recipient's name and phone number.}
+\ucstep{4}{Customer}{For delivery, enter the delivery address (address line, ward, district and city).}
+\ucstep{5}{Customer}{Optionally enter a discount code and request a preview.}
+\ucstep{6}{System}{Extension point \emph{Validate Discount Code}: validate the code and show the discount amount in the updated summary.}
+\ucstep{7}{Customer}{Confirm the order.}
+\ucstep{8}{System}{Check the branch, the products (active and available online), the item options and, for delivery, the delivery city.}
+\ucstep{9}{System}{Recalculate the item prices from product data, re-validate the discount code, if any, and add the delivery fee for delivery orders.}
+\ucstep{10}{System}{Record the order (source online, status preparing, payment unpaid) with its items, the initial status history and the discount usage, if any.}
+\ucstep{11}{System}{Clear the cart and display the order details with the order number.}
+\ucflowend
+\ucalthead
+\ucalt{A1}{3}{The Customer chooses store pickup.}{Step 4 is skipped and no delivery fee is charged.}
+\ucalt{A2}{5}{The Customer has no discount code.}{Steps 5--6 are skipped; the flow continues at step 7.}
+\ucalt{E1}{6}{The code does not exist, is inactive, is not yet valid or has expired, the rank is not eligible, or the subtotal is below the minimum order value.}{The system shows the reason and applies no discount. The Customer changes the code (step 5) or clears it and continues (step 7).}
+\ucalt{E2}{8}{The cart is empty, or a product is inactive or not available online.}{The order is rejected; the Customer updates the cart (step 1).}
+\ucalt{E3}{8}{The branch is not available.}{The order is rejected; the Customer selects another branch (step 3).}
+\ucalt{E4}{8}{The delivery city is missing or not recognised as Hanoi.}{The order is rejected; the Customer corrects the address or chooses store pickup (step 3).}
+\ucalt{E5}{9}{The discount code kept in the form is no longer valid, or was kept after a failed preview.}{The order is rejected and nothing is recorded; the Customer removes or changes the code (step 5).}
+\ucflowend
+\ucrow{Postconditions}{Success: an online order exists with status preparing and payment unpaid; it keeps the chosen options, branch and fulfilment method, and its total equals the item subtotal minus the discount plus any delivery fee. No delivery record is created and no points are awarded at this stage. Failure: no order is recorded.}
+\ucrow{Business Rules}{Payment is offline (at the store or on receipt). The default delivery fee is VND 20,000 and is configurable; store pickup has no fee. Delivery is restricted to Hanoi; only the city name is checked and the other address fields are optional. The discount never exceeds the item subtotal. Each line has a quantity of 1--50.}
+\end{usecase}

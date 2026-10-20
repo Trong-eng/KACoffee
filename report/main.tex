@@ -1,0 +1,49 @@
+\documentclass[12pt]{article}
+\input{preamble}
+
+\begin{document}
+
+% ======================= Cover page =======================
+\newgeometry{top=1.6cm,bottom=1.6cm,left=2.5cm,right=2.5cm}
+\begin{titlepage}
+  \centering
+  \setstretch{1.0}
+  {\fontsize{16}{19}\selectfont\bfseries \UniversityName\par}
+  \vspace{0.15cm}
+  {\fontsize{13.5}{16}\selectfont\bfseries \SchoolName\par}
+  \vspace{0.2cm}
+  \rule{\textwidth}{0.4pt}\par
+  \vspace{0.6cm}
+  \includegraphics[height=6.8cm]{figures/Logo_DHBK_HN.png}\par
+  \vspace{0.7cm}
+  {\fontsize{24}{30}\selectfont\bfseries \ProjectName\par}
+  \vspace{0.8cm}
+  {\Large Course: \CourseName\par}
+  \vspace{0.2cm}
+  {\Large Class Code: \ClassCode\par}
+  \vspace{0.2cm}
+  {\Large Supervisor: \Supervisor\par}
+  \vfill
+  {\raggedright\Large\bfseries Group Members:\par}
+  \vspace{0.3cm}
+  {\large
+  \begin{tabular*}{\textwidth}{@{\hspace{0.4cm}}l@{\extracolsep{\fill}}lr@{}}
+    Trần Quang Trọng      & 20235565 & trong.tq235565@sis.hust.edu.vn \\[9pt]
+    Nguyễn Ngọc Linh      & 20235520 & linh.nn235520@sis.hust.edu.vn \\[9pt]
+    Lê Nguyễn Phước Thành & 20235561 & thanh.lnp235561@sis.hust.edu.vn \\[9pt]
+    Nguyễn Đức Mạnh       & 20235525 & manh.nd235525@sis.hust.edu.vn \\[9pt]
+    Hoàng Văn Nhân        & 20235542 & nhan.hv235542@sis.hust.edu.vn \\
+  \end{tabular*}\par}
+  \vfill
+  {\large \SubmissionPlace, \SubmissionDate\par}
+\end{titlepage}
+\restoregeometry
+
+\tableofcontents
+\newpage
+
+\input{chapters/01_introduction}
+\input{chapters/02_planning}
+\input{chapters/03_analysis}
+
+\end{document}

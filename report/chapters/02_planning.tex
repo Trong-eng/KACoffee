@@ -1,0 +1,250 @@
+\section{Planning}
+
+\subsection{Motivation}
+
+Coffee chains increasingly serve customers through more than one channel. A customer may order online for delivery in the morning, buy a drink at the counter in the afternoon and place an order by telephone in the evening. Each of these purchases should count towards the same membership, follow the same pricing and promotion rules and be visible to the branch that prepares it. When these channels are handled by separate tools or manual notes, staff re-enter the same information, managers lack a combined view of sales and deliveries, and loyalty points are credited inconsistently.
+
+Our team is motivated to design a system in which every order, regardless of its source, follows one lifecycle from creation to completion, with each user group working in its own area. The project also gives the team a realistic setting in which to practise requirement analysis and system design before implementation: clear roles, branch-level access rules, state transitions for orders and deliveries, and business rules that must remain consistent across several use cases.
+
+\subsection{Initial System Request}
+
+\subsubsection{Business Need}
+
+KACoffee will support coffee chain operations through shared order and membership records. Customers will be able to place orders and review their own information. Staff will record assisted purchases and prepare orders, shippers will update assigned deliveries, and management will supervise branch activity. The system must preserve the relationship between each transaction, the responsible branch and the users involved.
+
+\subsubsection{Business Requirements}
+
+The proposed system must fulfil the following key requirements:
+
+\begin{itemize}
+  \item \textbf{Manage user accounts for different roles:} Customer, Staff, Shipper, Manager and Admin users each have their own login credentials, and Guest describes a visitor who has not signed in (Table~\ref{tab:user-groups}). Staff, Shipper and Admin have role-specific sign-in pages and work areas, supported by a shared employee authentication service.
+  \item \textbf{Register and authenticate users:} A customer registers with a unique phone number, full name and password; email is optional. A new account starts at the New membership rank with zero points. Customers sign in with their phone number and employees sign in with an assigned username. Passwords are stored as hashes, and authenticated sessions use access and refresh tokens. Inactive accounts and invalid credentials are rejected, and signed-in users can log out.
+  \item \textbf{Provision internal accounts:} The initial Admin account is provisioned during system setup. Admin can create employee accounts and assign their roles and branches; a Manager can create and manage Staff and Shipper accounts within the permitted branch scope. Internal users do not use the public customer registration form.
+  \item \textbf{Support online ordering:} A signed-in customer chooses active products available online, sets supported size, ice and sugar options, manages the cart, selects a branch and either store pickup or delivery (providing recipient and address information for delivery), and may apply a discount code. The system validates the code, calculates the final amount including any delivery fee and records the order with its items and initial status.
+  \item \textbf{Support staff-assisted ordering:} Staff create orders for walk-in customers and telephone callers, with product selection, drink customisation, optional member lookup by phone number and eligible discounts. Customers without an account can also be served. The order belongs to the employee's branch and records the employee who created it, and authorised staff update its preparation and completion states.
+  \item \textbf{Manage discount codes:} Admin views and creates discount codes using a percentage reduction or a fixed amount in VND, with an optional minimum order value, eligible membership ranks, an active state and optional validity dates. Order processing checks these conditions before applying a code and records its use with the transaction.
+  \item \textbf{Track deliveries:} An assigned shipper updates progress through pickup, delivery in progress and a successful or failed outcome, and the system retains a status history. A successful delivery completes the related order, marks its offline payment as paid and triggers eligible loyalty points; a failed delivery remains available for management follow-up and reassignment.
+  \item \textbf{Provide supporting functions:} Product and category management, branch and employee management, customer profiles, loyalty notifications, bottle exchanges, configurable delivery fees, revenue and performance reports, branch targets and an audit trail for important actions.
+\end{itemize}
+
+\begin{table}[H]
+  \centering
+  \caption{User groups and access rights}
+  \label{tab:user-groups}
+  \begin{tabularx}{\textwidth}{|L{2.0cm}|L{4.6cm}|Y|}
+    \hline
+    \textbf{User group} & \textbf{Account access} & \textbf{Main permissions} \\ \hline
+    Guest & No account required for public pages & Browse the public menu and register as a Customer. \\ \hline
+    Customer & Self-registration; phone number and password & Place online orders; view own profile, orders, membership points and notifications. \\ \hline
+    Staff & Provisioned account; username and password & Create assisted orders, look up members, update store orders and process bottle exchanges within the assigned branch. \\ \hline
+    Shipper & Provisioned account; username and password & View deliveries assigned to that shipper and record delivery progress or failure. \\ \hline
+    Manager & Provisioned account; username and password & Supervise orders, deliveries, reports and permitted employee records within the assigned branch. \\ \hline
+    Admin & Provisioned account; username and password & Manage system-wide products, branches, employee accounts, discounts, settings and reports. \\ \hline
+  \end{tabularx}
+\end{table}
+
+The following business rules apply across the requirements above:
+
+\begin{itemize}
+  \item \textbf{Order and payment rules:}
+  \begin{itemize}
+    \item Orders identify their source as online, in-store or phone. New orders start as preparing and unpaid. Staff mark prepared orders as ready; authorised completion or successful delivery completes the transaction.
+    \item The initial release supports offline payment at the store or on receipt. When a transaction is completed, the system records it as paid. Revenue reports use completed orders.
+    \item Delivery is initially restricted to eligible addresses in Hanoi. The default fee is VND 20,000 and is configurable. Store pickup does not incur the delivery fee.
+  \end{itemize}
+  \item \textbf{Membership and promotion rules:}
+  \begin{itemize}
+    \item An eligible completed order earns one point for every VND 1,000 of qualifying item value after discounts. Delivery fees and free items are excluded, and points are credited once per order.
+    \item Membership thresholds are New at 0 points, Silver at 100, Gold at 300 and Diamond at 700. A discount restricted to membership ranks applies only to the ranks explicitly configured for that code.
+    \item Discounts must satisfy active status, any validity period, minimum order value and membership eligibility. The reduction does not exceed the item subtotal. Usage records support transaction history; a one-use-per-customer restriction is outside the initial rules.
+    \item Bottle exchanges accept positive multiples of five returned bottles. Each group of five earns one eligible bottled product. Staff can process an exchange for a member or an unregistered customer.
+  \end{itemize}
+\end{itemize}
+
+\subsubsection{Business Value}
+
+The system brings value to the coffee chain and its users by:
+
+\begin{itemize}
+  \item \textbf{Reducing repeated data entry:} Order and customer information is shared across channels and branches instead of being re-entered.
+  \item \textbf{Applying policies consistently:} Common pricing, discount and membership checks help staff apply the same rules to every order.
+  \item \textbf{Improving the customer experience:} Customers have a convenient ordering channel and visibility of their membership benefits.
+  \item \textbf{Supporting branch supervision:} Managers can review completed sales and delivery outcomes by branch, while recorded actions help trace operational issues.
+\end{itemize}
+
+\subsubsection{Special Issues or Constraints}
+
+\begin{itemize}
+  \item \textbf{Scope:} The initial release is a browser-based application with role and branch access controls. External payment gateways, SMS verification, live GPS tracking and ingredient-level stock management are outside this release.
+  \item \textbf{Security and access control:} Protected screens and backend operations must check access rights. Customers access only their own records, shippers update only their own assigned deliveries, and branch restrictions apply to Staff and Manager operations.
+  \item \textbf{Data consistency:} Item choices and totals must be preserved across the order lifecycle, and order and delivery states must remain consistent with each other.
+  \item \textbf{System usability:} Interfaces should provide clear validation messages so that customers and staff can correct invalid input.
+  \item \textbf{Schedule:} The team will prioritise the five core use cases when making schedule trade-offs.
+\end{itemize}
+
+\subsection{Feasibility Analysis}
+
+\subsubsection{Technical Feasibility}
+
+\begin{itemize}
+  \item \textbf{Current technology availability:} The proposed architecture separates the browser interface, the application API and the relational database. This division lets members work on their assigned flows while sharing API contracts and a common data model. The selected stack (Table~\ref{tab:tech-stack}) is suitable for the planned web features.
+  \item \textbf{Developer expertise:}
+  \begin{itemize}
+    \item \textbf{Familiarity with the application:} The business domain of ordering, counter sales and delivery has been organised into five core use cases, each with a named owner.
+    \item \textbf{Familiarity with the technology:} The main challenge is integrating authentication, pricing and order state changes, so these parts will be integrated early.
+  \end{itemize}
+  \item \textbf{Infrastructure needs:} Docker Compose provides a consistent setup of the application and database for integration and demonstration. Local execution provides the baseline demonstration environment, so no dedicated server is required for the course project.
+  \item \textbf{Project size and schedule:} The working estimate is eight weeks for a five-member team. This is a planning assumption to be aligned with the course timetable. Each member owns a core use case, while account handling, the data model and shared API contracts are coordinated across the team. A connected order flow will be integrated before the final phase so that defects are found while there is time to resolve them.
+  \item \textbf{Technical risks:} The main risks are inconsistent API expectations, incorrect access checks and conflicting updates to orders or points. The team will agree request and response formats during design, centralise pricing and membership logic, and review state transitions before connecting the interfaces. Table~\ref{tab:risks} lists the initial risks and the planned responses.
+\end{itemize}
+
+\begin{table}[H]
+  \centering
+  \caption{Proposed technology stack}
+  \label{tab:tech-stack}
+  \begin{tabularx}{\textwidth}{|L{2.4cm}|L{5.0cm}|Y|}
+    \hline
+    \textbf{Component} & \textbf{Proposed technology} & \textbf{Purpose} \\ \hline
+    Frontend & React 19, TypeScript and Vite & Role-specific pages, reusable forms and navigation. \\ \hline
+    Client data & TanStack Query, Zustand and Axios & API data fetching, local interface state and HTTP requests. \\ \hline
+    Backend & Python and FastAPI & REST endpoints, request validation and business rules. \\ \hline
+    Data layer & MySQL 8.4, SQLAlchemy and Alembic & Relational storage, object mapping and schema migrations. \\ \hline
+    Identity & Password hashing and JWT tokens & User identity, sessions and role-based access checks. \\ \hline
+    Runtime & Docker Compose & A consistent application and database setup for integration and demonstration. \\ \hline
+  \end{tabularx}
+\end{table}
+
+\begin{table}[H]
+  \centering
+  \caption{Initial risks and mitigation}
+  \label{tab:risks}
+  \begin{tabularx}{\textwidth}{|L{4.2cm}|Y|L{2.6cm}|}
+    \hline
+    \textbf{Risk} & \textbf{Planned response} & \textbf{Lead} \\ \hline
+    Features exceed the available time & Prioritise UC001 to UC005; review added scope against the remaining schedule. & Trọng \\ \hline
+    Modules use inconsistent data or API formats & Agree shared contracts and migrations early; integrate small changes regularly. & Trọng with all members \\ \hline
+    Prices, discounts or points are calculated incorrectly & Keep calculations in shared backend services and check boundary-value scenarios. & Linh and Mạnh \\ \hline
+    A user accesses another role or branch's records & Enforce backend access checks and review both permitted and rejected requests. & Trọng with feature owners \\ \hline
+    Order and delivery states become inconsistent & Define valid transitions, retain status history and check success and failure flows. & Thành and Nhân \\ \hline
+    A member is delayed or unavailable & Record progress and handover notes; reassign a bounded task during the weekly review. & Trọng \\ \hline
+  \end{tabularx}
+\end{table}
+
+\textbf{Feasibility decision:} The team proposes proceeding with the scoped academic project, subject to confirming the course schedule and the shared design. The first checkpoint requires working role-based sign-in and an agreed data model; the next checkpoint requires an integrated order flow. Any additional feature will be considered against these commitments and the time reserved for integration and documentation.
+
+\subsubsection{Operational Feasibility}
+
+\begin{itemize}
+  \item \textbf{Fit with business workflows:} The proposed workflows follow the responsibilities of a coffee business. Customers place their own orders, staff prepare orders and handle assisted purchases, and shippers act on assigned deliveries. Managers coordinate activity within their branches. Separate work areas keep the actions relevant to each user group visible.
+  \item \textbf{Training and walkthroughs:} The team will prepare sample accounts for each role, sample products and a short usage guide. Operational review will cover a successful order as well as duplicate registration, invalid discounts and delivery failure.
+  \item \textbf{Continuous improvement:} Feedback from these walkthroughs will guide wording and navigation changes before the final demonstration.
+\end{itemize}
+
+\subsubsection{Economic Feasibility}
+
+\begin{itemize}
+  \item \textbf{Cost of development:} The course project relies on the team's existing computers and a local demonstration environment. The main resource demands are development time, integration work and documentation.
+  \item \textbf{Optional costs:} Hosting, a domain and managed database services are optional costs if remote deployment is later required. The team will confirm service terms and obtain current quotations before making spending commitments.
+  \item \textbf{Expected benefits:} The initial economic benefit will be demonstrated through fewer repeated entries, consistent calculations and easier access to operating information. Financial savings and commercial payback require real transaction volumes and operating costs before they can be estimated credibly.
+\end{itemize}
+
+\subsubsection{Legal \& Regulatory Feasibility}
+
+\begin{itemize}
+  \item \textbf{Data privacy:} KACoffee handles customer contact details, delivery addresses and employee account information. The team will minimise the information collected, restrict its visibility by role and use fictional records for development and demonstrations. Passwords and internal account data will not appear in public responses or reports.
+  \item \textbf{Compliance:} Before any real deployment, the team will review applicable data protection obligations, third-party licences and service terms.
+\end{itemize}
+
+\subsubsection{Market Feasibility}
+
+\begin{itemize}
+  \item \textbf{Target and value proposition:} The project targets a coffee chain that needs shared membership policies and coordinated sales across several branches. Its value proposition is the combination of customer ordering, assisted sales and internal delivery in one application.
+  \item \textbf{User fit:} The team will assess user fit through scenario walkthroughs and feedback on the proposed screens. Adoption levels and competitive advantage remain hypotheses until evaluated with actual operators and customers.
+\end{itemize}
+
+\subsection{Initial Project Plan}
+
+The project will follow an \textbf{iterative and incremental approach}, with short development iterations within the proposed eight-week plan. Each iteration will have a defined set of tasks and a reviewable result. Early work will establish accounts, products, branches and shared data contracts; later iterations will connect ordering, promotions and delivery.
+
+Key reasons for choosing this approach are:
+
+\begin{itemize}
+  \item \textbf{Early integration:} Authentication, pricing and order state changes are shared by several use cases, so connecting them in early iterations exposes inconsistencies while there is still time to fix them.
+  \item \textbf{Reviewable increments:} Each iteration produces a demonstrable result that can be reviewed by the team at the weekly meeting.
+  \item \textbf{Clear ownership:} Each member owns one core use case end to end, from requirement analysis to documentation, which keeps responsibilities visible.
+  \item \textbf{Risk reduction:} Testing and documentation accompany development rather than being left entirely to the final week.
+\end{itemize}
+
+\subsubsection{Project Scope Estimation}
+
+\paragraph{Scope Size:} The project focuses on the transaction flow from account registration and order creation to preparation, collection or delivery, and completion. Development is organised around five selected use cases, with authentication, product data and branch data as the shared foundation. Each use case is listed with its acceptance focus:
+
+\begin{itemize}
+  \item \textbf{UC001 Register as Customer:} Valid registration creates one account; invalid or duplicate input produces an understandable error without creating another account.
+  \item \textbf{UC002 Place Online Order:} The order retains the chosen options, branch and fulfilment method, and its total reflects valid discounts and any delivery fee.
+  \item \textbf{UC003 Create Staff-Assisted Order:} Both member and non-member purchases can be recorded, while invalid member information, unavailable products and ineligible discounts are handled clearly.
+  \item \textbf{UC004 Manage Discount Codes:} A valid code reduces the item subtotal correctly; an inactive, expired or otherwise ineligible code is rejected.
+  \item \textbf{UC005 Update Delivery Status:} Only the assigned shipper can update a delivery, invalid transitions are rejected, and the delivery outcome stays consistent with the related order.
+\end{itemize}
+
+Supporting functions (product, branch and employee management, bottle exchanges, delivery fees, reports, branch targets and the audit trail) are included to complete the order lifecycle, while external payment gateways, SMS verification, live GPS tracking and ingredient-level stock management are outside this release.
+
+\paragraph{Time Estimate:} The project will span eight weeks, organised as short iterations and expressed in relative project weeks (Table~\ref{tab:schedule}). The team will confirm calendar dates against the course deadline and adjust task sizes while protecting time for integration and final review.
+
+\begin{table}[H]
+  \centering
+  \caption{Proposed schedule and milestones}
+  \label{tab:schedule}
+  \begin{tabularx}{\textwidth}{|L{2.0cm}|Y|Y|}
+    \hline
+    \textbf{Period} & \textbf{Planned work} & \textbf{Expected output} \\ \hline
+    Week 1 & Confirm scope, accounts, business rules and member responsibilities. & Agreed requirements, initial backlog and use case descriptions. \\ \hline
+    Week 2 & Design the data model, screens and API contracts; establish the shared environment. & Schema, interface sketches, contracts and a running project skeleton. \\ \hline
+    Weeks 3 and 4 & Implement registration, role-based sign-in, product access, online and assisted ordering. & Demonstrable UC001 to UC003 with basic access checks. \\ \hline
+    Weeks 5 and 6 & Connect discount management, delivery and completion; integrate supporting functions. & UC004 and UC005 plus a connected order and loyalty flow. \\ \hline
+    Week 7 & Review permissions and business rules, exercise failure cases and fix integration defects. & Reviewed test results, corrected defects and a stable demo dataset. \\ \hline
+    Week 8 & Complete the report, usage guide and presentation; rehearse the demonstration. & Final application package, documentation and team demonstration. \\ \hline
+  \end{tabularx}
+\end{table}
+
+\subsubsection{Staffing Plan}
+
+The five members will own the five selected use cases. Ownership covers requirement analysis, interface and API design, implementation, tests and documentation for the assigned flow. Supporting functions are grouped with the nearest business area (Table~\ref{tab:staffing}).
+
+\begin{table}[H]
+  \centering
+  \caption{Team structure and responsibilities}
+  \label{tab:staffing}
+  \begin{tabularx}{\textwidth}{|L{1.6cm}|L{4.0cm}|Y|}
+    \hline
+    \textbf{Member} & \textbf{Role / use case} & \textbf{Planned responsibilities} \\ \hline
+    Trọng & Team coordinator; Guest and UC001 & Coordinate scope and progress; build registration and shared authentication; maintain role checks; coordinate integration and the final report. \\ \hline
+    Linh & Customer flow owner; UC002 & Build menu selection, cart, online checkout and customer order views; coordinate product options, totals and customer membership information. \\ \hline
+    Thành & Staff flow owner; UC003 & Build assisted ordering, member lookup and store order handling; support preparation updates and bottle exchange. \\ \hline
+    Mạnh & Administration owner; UC004 & Build discount administration and eligibility rules; coordinate products, branches, employee management and operational reports. \\ \hline
+    Nhân & Delivery flow owner; UC005 & Build assigned delivery views and status updates; coordinate assignment and reassignment with administration, order completion and delivery history. \\ \hline
+  \end{tabularx}
+\end{table}
+
+Shared work will be coordinated as follows:
+
+\begin{itemize}
+  \item \textbf{Shared design:} All members agree the core data model and review changes to shared entities. Trọng coordinates account identity and access rules. Linh and Thành agree the common order structure and item options, Mạnh provides discount validation rules, and Nhân agrees delivery outcomes with both order owners.
+  \item \textbf{Peer review:} Linh reviews registration, Thành reviews online ordering, Mạnh reviews assisted ordering, Nhân reviews discount handling, and Trọng reviews delivery. The owner remains responsible for resolving review findings and keeping the related documentation current.
+  \item \textbf{Communication:} The team holds one progress meeting each week and uses a shared group chat for blockers. Trọng summarises decisions, dependencies and any reassignment so that changes remain visible to everyone.
+  \item \textbf{Change management:} Members work on separate Git branches and submit changes for peer review before merging. A feature is ready for integration when its main flow, validation behaviour, access rules and documentation have been reviewed. Changes to the database or shared APIs include an update to the agreed design, and new requirements are assessed for their impact on the five core use cases and the remaining schedule.
+  \item \textbf{Quality review:} The planned review covers successful transactions, duplicate registration, invalid credentials, cross-account and cross-branch access, ineligible discounts, non-member counter orders and failed deliveries, and checks that completion awards points once and excludes delivery fees.
+  \item \textbf{Final deliverables:} The application source code, database migrations and demonstration data, setup instructions, use case and design documentation, the test summary, user guidance and presentation slides. Each member will demonstrate the assigned flow and explain its connection to the shared system.
+\end{itemize}
+
+\subsubsection{CASE Tools}
+
+The project makes use of the following CASE (Computer-Aided Software Engineering) and supporting tools:
+
+\begin{itemize}
+  \item \textbf{UML diagram creation:} draw.io (diagrams.net) is used to draw the use case diagram and the swimlane activity diagrams; later design diagrams will use the same tool. Diagram sources are kept with the report so that they can be edited.
+  \item \textbf{Database design:} Alembic migrations keep the relational schema under version control; a database client such as MySQL Workbench is planned for inspecting and documenting the schema.
+  \item \textbf{API documentation:} The FastAPI interactive documentation is used to agree and check request and response formats.
+  \item \textbf{Project management:} A GitHub task board records each task's owner, acceptance criteria, status and target week; Git branches and pull requests support peer review.
+  \item \textbf{Documentation:} The report is written in \LaTeX{} so that sections, tables and figures are numbered and cross-referenced consistently.
+\end{itemize}

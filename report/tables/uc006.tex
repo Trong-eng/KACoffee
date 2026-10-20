@@ -1,0 +1,19 @@
+\begin{usecase}{UC006}{Log In}
+\ucrow{Actor}{Customer, Staff, Shipper, Manager, Admin}
+\ucrow{Usage}{Authenticate a registered user so that the user can access the work area of their role.}
+\ucrow{Activation Event}{The user selects ``Log In'' on the customer sign-in page or on a role-specific employee sign-in page (Staff, Shipper or Admin).}
+\ucrow{Preconditions}{The user has an active account: a customer account created through UC001, or an employee account provisioned by Admin or Manager.}
+\ucflowhead
+\ucstep{1}{User}{Open the sign-in page for their user group.}
+\ucstep{2}{System}{Present the login form: phone number and password for customers, username and password for employees.}
+\ucstep{3}{User}{Enter the credentials and submit the form.}
+\ucstep{4}{System}{Verify that an active account matches the credentials.}
+\ucstep{5}{System}{Issue access and refresh tokens and load the user's profile and role.}
+\ucstep{6}{System}{Open the work area of the role: member area for Customer, staff area for Staff, shipper area for Shipper and administration area for Manager and Admin.}
+\ucflowend
+\ucalthead
+\ucalt{E1}{4}{The credentials are invalid or the account is inactive.}{The system shows ``Invalid credentials'' without revealing which part is wrong; the user tries again from step 3.}
+\ucflowend
+\ucrow{Postconditions}{The user is authenticated, the refresh token is recorded and the work area matching the user's role is displayed.}
+\ucrow{Business Rules}{Customers sign in with their phone number; employees sign in with an assigned username through a shared employee authentication service. Inactive accounts are rejected.}
+\end{usecase}

@@ -1,0 +1,13 @@
+\begin{usecase}{UC007}{Log Out}
+\ucrow{Actor}{Customer, Staff, Shipper, Manager, Admin}
+\ucrow{Usage}{End the user's current session on the browser.}
+\ucrow{Activation Event}{The user selects ``Log Out''.}
+\ucrow{Preconditions}{The user is signed in.}
+\ucflowhead
+\ucstep{1}{User}{Select ``Log Out''.}
+\ucstep{2}{System}{Remove the stored tokens and profile from the browser.}
+\ucstep{3}{System}{Show the signed-out header; a protected page redirects to the sign-in page of its portal.}
+\ucflowend
+\ucrow{Postconditions}{The session is ended on the browser; protected screens require signing in again (UC006).}
+\ucrow{Business Rules}{The backend also offers a logout endpoint that revokes the refresh token so that it can no longer obtain new access tokens; the current web interface ends the session locally and does not call it.}
+\end{usecase}

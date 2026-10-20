@@ -1,0 +1,23 @@
+\begin{usecase}{UC001}{Register as Customer}
+\ucrow{Actor}{Guest}
+\ucrow{Usage}{Allow a visitor without an account to create a customer membership account with a phone number, so that the visitor can place online orders and earn loyalty points.}
+\ucrow{Activation Event}{The Guest selects ``Register'' and submits the registration form.}
+\ucrow{Preconditions}{The Guest is not signed in and is on the KACoffee website.}
+\ucflowhead
+\ucstep{1}{Guest}{Select ``Register''.}
+\ucstep{2}{System}{Present the registration form: full name, phone number, password and an optional email.}
+\ucstep{3}{Guest}{Fill out the form and submit it.}
+\ucstep{4}{System}{Validate the required fields and their length constraints.}
+\ucstep{5}{System}{Check that the phone number has not already been registered.}
+\ucstep{6}{System}{Create the customer account at the New membership rank with zero points and add a welcome notification.}
+\ucstep{7}{System}{Issue access and refresh tokens to start a signed-in session.}
+\ucstep{8}{System}{Load the account summary and open the member area.}
+\ucflowend
+\ucalthead
+\ucalt{A1}{3}{The Guest leaves the form.}{The use case ends and no account is created.}
+\ucalt{E1}{4}{Data is missing or invalid.}{The system shows a validation message for each invalid field; the Guest corrects the data and continues from step 3.}
+\ucalt{E2}{5}{The phone number is already registered.}{The system shows ``Phone already registered'' and creates no account. The Guest enters another phone number (step 3) or signs in instead (UC006).}
+\ucflowend
+\ucrow{Postconditions}{Success: exactly one new customer account exists at the New rank with zero points, a welcome notification is stored and the customer is signed in. Failure: no account is created.}
+\ucrow{Business Rules}{The phone number is unique and is the customer's login identifier. Full name is 1--100 characters, phone number 8--20 characters and password 6--100 characters; email is optional. Passwords are stored as hashes. This release has no OTP or email verification step.}
+\end{usecase}

@@ -1,0 +1,160 @@
+\section{Analysis}
+
+\subsection{General Use Case Diagram}
+
+Figure~\ref{fig:general-uc} depicts the general use case diagram of the KACoffee system. The system boundary contains the browser interface, the application API and the data managed by the system; the database, services and authentication tokens are internal parts of the system and are therefore not actors. External services such as payment gateways, SMS verification and GPS tracking are outside this release and do not appear in the diagram.
+
+\diagram{general_use_case}{General use case diagram of the KACoffee system}{fig:general-uc}{1.0}
+
+The system has six actors:
+
+\begin{itemize}
+  \item \textbf{Guest:} Represents a visitor who has not signed in. A Guest can browse the public menu and content, prepare a cart and register as a Customer. Upon successful registration, the visitor becomes a Customer.
+  \item \textbf{Customer:} Represents a registered member who signs in with a phone number. Customers place online orders for pickup or delivery, manage their profile, review and cancel their own orders while they are still being prepared, and view their membership rank, points and notifications.
+  \item \textbf{Staff:} Represents a store employee working at the counter of one branch. Staff create staff-assisted orders for walk-in customers and telephone callers, look up members by phone number, update the status of the branch's orders and process bottle exchanges.
+  \item \textbf{Shipper:} Represents a delivery employee of a branch. Shippers view the deliveries assigned to them and record pickup, delivery progress and a successful or failed outcome.
+  \item \textbf{Manager:} Represents the supervisor of one branch. Managers assign and reassign shippers, manage Staff and Shipper accounts of their branch and view the branch's reports, target progress and audit log. Managers may also use the Staff functions.
+  \item \textbf{Admin:} Represents the system administrator. Admin manages system-wide products, categories, branches, employee accounts, discount codes, performance targets and system settings, and can view reports for all branches. Admin may also use the Staff and Manager functions.
+\end{itemize}
+
+To keep the diagram readable, actor generalisation is used where one role can perform every use case of another: Manager specialises Staff and Admin specialises Manager, so the Staff use cases are drawn only once. \textit{Employee} is an abstract actor that groups the internal accounts (Staff and Shipper, and through them Manager and Admin) which sign in through the shared employee authentication service; it is not a separate user group.
+
+Table~\ref{tab:uc-catalogue} lists the use cases shown in the diagram. UC001 to UC005 are the five core use cases of the project; UC006 to UC010 are supporting use cases that complete the order lifecycle. These ten use cases are specified in Section~\ref{sec:uc-details} and modelled in Section~\ref{sec:activity}. The remaining use cases are included to show the full scope of the system.
+
+\begin{longtable}{|L{1.5cm}|L{6.2cm}|L{6.4cm}|}
+  \caption{Use case catalogue}\label{tab:uc-catalogue}\\
+  \hline
+  \textbf{Code} & \textbf{Use case} & \textbf{Actors} \\ \hline
+  \endfirsthead
+  \hline
+  \textbf{Code} & \textbf{Use case} & \textbf{Actors} \\ \hline
+  \endhead
+  UC001 & Register as Customer & Guest \\ \hline
+  UC002 & Place Online Order & Customer \\ \hline
+  UC003 & Create Staff-Assisted Order & Staff (also Manager, Admin) \\ \hline
+  UC004 & Manage Discount Codes & Admin \\ \hline
+  UC005 & Update Delivery Status & Shipper \\ \hline
+  UC006 & Log In & Customer, Staff, Shipper, Manager, Admin \\ \hline
+  UC007 & Log Out & Customer, Staff, Shipper, Manager, Admin \\ \hline
+  UC008 & Update Store Order Status & Staff (also Manager, Admin) \\ \hline
+  UC009 & Assign Delivery & Manager, Admin \\ \hline
+  UC010 & Process Bottle Exchange & Staff (also Manager, Admin) \\ \hline
+  UC011 & Browse Menu and Public Content & Guest, Customer \\ \hline
+  UC012 & Manage Cart & Guest, Customer \\ \hline
+  UC013 & Manage Profile & Customer \\ \hline
+  UC014 & View Orders and Order Tracking & Customer \\ \hline
+  UC015 & Cancel Own Order & Customer \\ \hline
+  UC016 & View Membership, Points and Notifications & Customer \\ \hline
+  UC017 & Manage Products and Categories & Admin \\ \hline
+  UC018 & Manage Branches & Admin \\ \hline
+  UC019 & Manage Employees & Manager (own branch), Admin \\ \hline
+  UC020 & View Reports and Audit Logs & Manager (own branch), Admin \\ \hline
+  UC021 & Configure Targets and System Settings & Admin \\ \hline
+  UC022 & View Bottle Exchange History & Admin \\ \hline
+  UC023 & Validate Discount Code & --- (extends UC002, UC003) \\ \hline
+  UC024 & Look Up Member & --- (extends UC003) \\ \hline
+  UC025 & Award Loyalty Points & --- (extends UC005, UC008) \\ \hline
+\end{longtable}
+
+UC023 to UC025 have no actor of their own; they are reached only through the base use cases they extend. The diagram uses the following «extend» relationships:
+
+\begin{itemize}
+  \item \textbf{UC023 Validate Discount Code} «extend» UC002 and UC003: executed only when a discount code is entered. The same validation rules (active state, validity dates, minimum order value and eligible ranks) are shared by both ordering channels.
+  \item \textbf{UC024 Look Up Member} «extend» UC003: executed only when the customer is a member and Staff enters a phone number.
+  \item \textbf{UC025 Award Loyalty Points} «extend» UC005 and UC008: executed when an order linked to a member reaches the completed status, either by a successful delivery (UC005) or by completing a pickup order (UC008). Points are not awarded when an order is created in UC002 or UC003.
+\end{itemize}
+
+Each extension is inserted at the named extension point of the base use case, and the arrow points from the extending use case to the base use case. Signing in (UC006) is a precondition of the protected use cases rather than an included use case, and a failed delivery is described as an alternative flow of UC005 instead of a separate use case.
+
+\subsection{Use Case Details}\label{sec:uc-details}
+
+Each use case is specified with the fields of the template, extended with Alternative Flows and Business Rules rows. The main event flow lists who performs each step; each alternative flow gives the step where it starts, its condition, the handling and where the flow continues or ends. Flows labelled A are valid alternatives and flows labelled E are exceptions.
+
+\subsubsection{Guest's and Common Use Cases}
+
+\input{tables/uc001}
+\input{tables/uc006}
+\input{tables/uc007}
+
+\subsubsection{Customer's Use Cases}
+
+\input{tables/uc002}
+
+\subsubsection{Staff's Use Cases}
+
+\input{tables/uc003}
+\input{tables/uc008}
+\input{tables/uc010}
+
+\subsubsection{Shipper's Use Cases}
+
+\input{tables/uc005}
+
+\subsubsection{Manager's and Admin's Use Cases}
+
+\input{tables/uc009}
+\input{tables/uc004}
+
+\clearpage
+\subsection{Activity Diagram}\label{sec:activity}
+
+Each activity diagram uses swimlanes to show who performs each action. The left lane is the actor that starts the use case and the right lane is the KACoffee System; UC003 adds a ``Store Customer / Caller'' lane and UC010 a ``Store Customer'' lane. Decision nodes carry guard conditions in brackets, and error branches return to the step where the user corrects the input or end the activity.
+
+\subsubsection{Guest's and Common Use Cases}
+
+\paragraph{UC001: Register as Customer}
+The Guest fills out the form and the system validates the data and checks the phone number; both invalid data and a duplicate phone number loop back to the form, while a valid registration ends with the signed-in member area.
+\diagram[0.62]{AD-UC001}{Activity diagram of UC001 Register as Customer}{fig:ad-uc001}{0.9}
+
+\clearpage
+\paragraph{UC006: Log In}
+The user submits credentials on the sign-in page of their group; invalid credentials loop back to the form, and a successful sign-in branches to the work area of the user's role.
+\diagram{AD-UC006}{Activity diagram of UC006 Log In}{fig:ad-uc006}{0.9}
+
+\clearpage
+\paragraph{UC007: Log Out}
+The system clears the stored session in the browser and shows the signed-out interface; protected pages redirect to the sign-in page.
+\diagram{AD-UC007}{Activity diagram of UC007 Log Out}{fig:ad-uc007}{0.85}
+
+\clearpage
+\subsubsection{Customer's Use Cases}
+
+\paragraph{UC002: Place Online Order}
+The diagram branches on the fulfilment method and on whether a discount code is entered, and shows the validation of the branch, products and delivery city before the order is recorded. A rejected order returns the Customer to the checkout form, where the branch, address, discount code or cart can be corrected (E2--E5).
+\diagram{AD-UC002}{Activity diagram of UC002 Place Online Order}{fig:ad-uc002}{1.0}
+
+\clearpage
+\subsubsection{Staff's Use Cases}
+
+\paragraph{UC003: Create Staff-Assisted Order}
+The customer or caller states the order, Staff enters it on the POS screen, and the system looks up the member, looping back when the phone number is not found, and validates the order; non-members skip the lookup.
+\diagram{AD-UC003}{Activity diagram of UC003 Create Staff-Assisted Order}{fig:ad-uc003}{1.0}
+
+\clearpage
+\paragraph{UC008: Update Store Order Status}
+The system checks the branch and the transition (an order of another branch ends the activity, a disallowed transition returns to the selection), then branches on the new status: ready (with a delivery record for delivery orders), completed for pickup orders only (with payment and points) or cancelled.
+\diagram{AD-UC008}{Activity diagram of UC008 Update Store Order Status}{fig:ad-uc008}{1.0}
+
+\clearpage
+\paragraph{UC010: Process Bottle Exchange}
+Staff records the returned bottles and the reward product; the system checks the quantity, product and optional member before recording the exchange.
+\diagram{AD-UC010}{Activity diagram of UC010 Process Bottle Exchange}{fig:ad-uc010}{1.0}
+
+\clearpage
+\subsubsection{Shipper's Use Cases}
+
+\paragraph{UC005: Update Delivery Status}
+The Shipper moves the delivery through pickup and delivery; the outcome decision leads either to completing the order and awarding points or to recording a failed delivery, which can also be reported before pickup or during delivery.
+\diagram{AD-UC005}{Activity diagram of UC005 Update Delivery Status}{fig:ad-uc005}{1.0}
+
+\clearpage
+\subsubsection{Manager's and Admin's Use Cases}
+
+\paragraph{UC009: Assign Delivery}
+The Manager selects a delivery and a shipper; the system checks the order and the shipper's branch before recording the assignment.
+\diagram{AD-UC009}{Activity diagram of UC009 Assign Delivery}{fig:ad-uc009}{0.9}
+
+\clearpage
+\paragraph{UC004: Manage Discount Codes}
+The Admin fills out the creation form; duplicate or invalid codes loop back to the form, and a valid code is saved with its eligible ranks or, when no rank is selected, without a rank restriction.
+\diagram{AD-UC004}{Activity diagram of UC004 Manage Discount Codes}{fig:ad-uc004}{0.9}

@@ -1,0 +1,123 @@
+% ---------------------------------------------------------------
+% Preamble — KACoffee System Design Report
+% Build with XeLaTeX (Times New Roman supports Vietnamese names):
+%   latexmk -xelatex main.tex
+% ---------------------------------------------------------------
+\usepackage[a4paper,top=2.5cm,bottom=2.5cm,left=2.5cm,right=2.5cm]{geometry}
+\usepackage{fontspec}
+\setmainfont{Times New Roman}
+\usepackage{xcolor}
+\usepackage{titlesec}
+\usepackage{tocloft}
+\usepackage{enumitem}
+\usepackage{array}
+\usepackage{tabularx}
+\usepackage{longtable}
+\usepackage{multirow}
+\usepackage{makecell}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{caption}
+\usepackage{indentfirst}
+\usepackage{setspace}
+\usepackage[hidelinks]{hyperref}
+
+% ---- Cover-page placeholders (fill in before submission) ----
+\newcommand{\UniversityName}{HANOI UNIVERSITY OF SCIENCE AND TECHNOLOGY}
+\newcommand{\SchoolName}{School of Communication and Information Technology}
+\newcommand{\ReportTitle}{Final Report}
+\newcommand{\ProjectName}{KACoffee -- Coffee Ordering and Chain Management System}
+\newcommand{\CourseName}{System Design - IT3120E}
+\newcommand{\ClassCode}{175881}
+\newcommand{\Supervisor}{Dr. Nguyen Duc Anh}
+\newcommand{\SubmissionPlace}{Hanoi}
+% Submission date = compile date, in the template's style ("Dec 18th 2024")
+\newcommand{\ordsuffix}[1]{%
+  \ifnum#1>10 \ifnum#1<14 th\else\ordsuffixunit{#1}\fi\else\ordsuffixunit{#1}\fi}
+\newcommand{\ordsuffixunit}[1]{%
+  \ifcase\numexpr#1-10*(#1/10)\relax th\or st\or nd\or rd\else th\fi}
+\newcommand{\SubmissionDate}{%
+  \ifcase\month\or Jan\or Feb\or Mar\or Apr\or May\or Jun\or Jul\or Aug\or Sep\or Oct\or Nov\or Dec\fi\
+  \the\day\ordsuffix{\day}\ \the\year}
+
+% ---- Colours and headings (blue headings as in the template) ----
+\definecolor{headblue}{HTML}{2E74B5}
+\titleformat{\section}{\color{headblue}\bfseries\fontsize{20}{24}\selectfont}{\thesection}{0.5em}{}
+\titleformat{\subsection}{\color{headblue}\bfseries\fontsize{16}{20}\selectfont}{\thesubsection}{0.5em}{}
+\titleformat{\subsubsection}{\color{headblue}\bfseries\fontsize{13}{16}\selectfont}{\thesubsubsection}{0.5em}{}
+\titleformat{\paragraph}[hang]{\bfseries}{}{0em}{}
+\titlespacing*{\section}{0pt}{18pt}{10pt}
+\titlespacing*{\subsection}{0pt}{14pt}{8pt}
+\titlespacing*{\subsubsection}{0pt}{12pt}{6pt}
+\titlespacing*{\paragraph}{0pt}{8pt}{4pt}
+\setcounter{secnumdepth}{4}
+\setcounter{tocdepth}{3}
+
+% ---- Table of contents with dotted leaders ----
+\renewcommand{\cftsecleader}{\cftdotfill{\cftdotsep}}
+\renewcommand{\cftsecfont}{\bfseries}
+\renewcommand{\cftsecpagefont}{\bfseries}
+\renewcommand{\cftdotsep}{1}
+\renewcommand{\cfttoctitlefont}{\color{headblue}\bfseries\fontsize{20}{24}\selectfont}
+\renewcommand{\contentsname}{Table of Contents}
+
+% ---- Body text ----
+\setlength{\parindent}{1.25cm}
+\setlength{\parskip}{4pt}
+\setstretch{1.15}
+
+% ---- Lists: "-" bullets and "+" sub-bullets as in the template ----
+\setlist[itemize,1]{label=-,leftmargin=1.6cm,itemsep=2pt,topsep=4pt}
+\setlist[itemize,2]{label=+,leftmargin=1.0cm,itemsep=1pt}
+
+% ---- Tables ----
+\renewcommand{\arraystretch}{1.3}
+\newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
+\newcolumntype{Y}{>{\raggedright\arraybackslash}X}
+\captionsetup{font=small,labelfont=bf,skip=6pt}
+
+% ---- Figures: include figures/<name>.pdf when it exists, else a placeholder box ----
+% \diagram[max height as fraction of \textheight]{name}{caption}{label}{width as fraction of \textwidth}
+\newcommand{\diagram}[5][0.74]{%
+  \begin{figure}[H]
+    \centering
+    \IfFileExists{figures/#2.pdf}{%
+      \includegraphics[width=#5\textwidth,height=#1\textheight,keepaspectratio]{figures/#2.pdf}%
+    }{%
+      \fbox{\parbox[c][6cm][c]{0.8\textwidth}{\centering\itshape Diagram placeholder: \detokenize{#2}}}%
+    }
+    \caption{#3}
+    \label{#4}
+  \end{figure}}
+
+% ---- Use case specification tables (layout of the template's 3.2) ----
+% Four columns: label | Index | Done by | Action. The first row reuses them as
+% "Use Case Code | code | Use Case Name | name", as in the template.
+\newlength{\uclabelw}\setlength{\uclabelw}{3.0cm}
+\newlength{\ucidxw}\setlength{\ucidxw}{1.5cm}
+\newlength{\ucdoerw}\setlength{\ucdoerw}{3.0cm}
+\newlength{\ucactw}
+\setlength{\ucactw}{\dimexpr\textwidth-\uclabelw-\ucidxw-\ucdoerw-8\tabcolsep-5\arrayrulewidth\relax}
+\newlength{\ucspanw}
+\setlength{\ucspanw}{\dimexpr\ucidxw+\ucdoerw+\ucactw+4\tabcolsep+2\arrayrulewidth\relax}
+
+% \begin{usecase}{UC001}{Register as Customer} ... \end{usecase}
+\newenvironment{usecase}[2]{%
+  \par\noindent\textbf{#1: #2}\par\nopagebreak
+  \setlength{\LTpre}{4pt}\setlength{\LTpost}{10pt}
+  \begin{longtable}{|L{\uclabelw}|L{\ucidxw}|L{\ucdoerw}|L{\ucactw}|}
+  \hline
+  \textbf{Use Case Code} & #1 & \textbf{Use Case Name} & #2 \\* \hline
+}{%
+  \end{longtable}
+}
+% A full-width row: \ucrow{Actor}{Guest}
+\newcommand{\ucrow}[2]{\textbf{#1} & \multicolumn{3}{L{\ucspanw}|}{#2} \\ \hline}
+% Main Event Flow block
+\newcommand{\ucflowhead}{\textbf{Main Event Flow} & \textbf{Index} & \textbf{Done by} & \textbf{Action} \\* \cline{2-4}}
+\newcommand{\ucstep}[3]{ & #1 & #2 & #3 \\ \cline{2-4}}
+\newcommand{\ucflowend}{\cline{1-1}}
+% Alternative / exception flows: one row per flow, so tables break cleanly
+% \ucalt{ID}{step}{condition}{handling and resume point}
+\newcommand{\ucalthead}{\textbf{Alternative Flows} & \textbf{ID (step)} & \textbf{Condition} & \textbf{Handling and resume point} \\* \cline{2-4}}
+\newcommand{\ucalt}[4]{ & \textbf{#1} (#2) & #3 & #4 \\ \cline{2-4}}

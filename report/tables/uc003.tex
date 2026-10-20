@@ -1,0 +1,30 @@
+\begin{usecase}{UC003}{Create Staff-Assisted Order}
+\ucrow{Actor}{Staff (Manager and Admin may also use this function). Supporting participant: Store Customer / Caller, who does not use the system directly.}
+\ucrow{Usage}{Allow staff to record an order for a walk-in customer or a telephone caller, with or without a membership account.}
+\ucrow{Activation Event}{Staff receives an order request at the counter or by phone and opens the point-of-sale (POS) order screen.}
+\ucrow{Preconditions}{Staff is signed in and assigned to a branch. At least one product is available for in-store ordering.}
+\ucflowhead
+\ucstep{1}{Store Customer / Caller}{Tell the staff member which drinks they want.}
+\ucstep{2}{Staff}{Open the POS order screen and select the order source (in-store or phone).}
+\ucstep{3}{System}{Display the products available for in-store ordering.}
+\ucstep{4}{Staff}{Select products, quantities, size, ice and sugar levels and the serving option (dine-in or takeaway).}
+\ucstep{5}{System}{Update the line items and the running subtotal.}
+\ucstep{6}{Staff}{Ask whether the customer is a member; if so, enter the member's phone number and look it up.}
+\ucstep{7}{System}{Extension point \emph{Look Up Member}: display the member's name, membership rank and current points.}
+\ucstep{8}{Staff}{Enter the recipient information, the fulfilment method and, if provided, a discount code.}
+\ucstep{9}{Staff}{Confirm the order.}
+\ucstep{10}{System}{Validate the products, the recipient and delivery data and the member; at the extension point \emph{Validate Discount Code}, validate the code, if any; then calculate the official total.}
+\ucstep{11}{System}{Record the order in the staff member's branch (source in-store or phone, status preparing, payment unpaid) with the creating employee, the items, the status history and the discount usage, if any.}
+\ucstep{12}{System}{Display the created order with the server-calculated discount and total.}
+\ucflowend
+\ucalthead
+\ucalt{A1}{2--9}{Staff cancels before confirming.}{The use case ends and nothing is recorded.}
+\ucalt{A2}{6}{The customer is not a member.}{Staff leaves the phone number empty; step 7 is skipped and the order continues at step 8 without member benefits.}
+\ucalt{E1}{7}{No member has this phone number.}{The system reports that the member was not found. Staff corrects the number (step 6) or clears it to continue as a non-member (step 8); if the unknown number is left in the form, the order is rejected at step 10.}
+\ucalt{A3}{8}{The customer has no discount code.}{Staff leaves the code empty and continues at step 9.}
+\ucalt{E2}{10}{A discount code is entered without an identified member, or the code is invalid, expired, below the minimum order value or not eligible for the rank.}{The order is rejected and nothing is recorded; Staff removes or changes the code (step 8).}
+\ucalt{E3}{10}{The delivery city is missing or not recognised as Hanoi, or a delivery order contains a dine-in item.}{The order is rejected; Staff corrects the items (step 4) or the delivery data (step 8).}
+\ucflowend
+\ucrow{Postconditions}{Success: an order with source in-store or phone, status preparing and payment unpaid belongs to the staff member's branch and records the employee who created it. Loyalty points are awarded only when the order is later completed (UC005 or UC008). Failure: no order is recorded.}
+\ucrow{Business Rules}{Source (in-store or phone), fulfilment method (pickup or delivery) and serving option (dine-in or takeaway) are independent attributes. A discount code requires an identified member. Unavailable products are not offered on the POS screen.}
+\end{usecase}

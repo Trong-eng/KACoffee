@@ -1,0 +1,23 @@
+\begin{usecase}{UC008}{Update Store Order Status}
+\ucrow{Actor}{Staff (Manager and Admin may also use this function)}
+\ucrow{Usage}{Move an order of the branch through preparation: mark it ready, complete a pickup order or cancel an order that is still being prepared.}
+\ucrow{Activation Event}{Staff selects an order on the order status screen and chooses a new status.}
+\ucrow{Preconditions}{Staff is signed in. The order belongs to the staff member's branch (Admin is not restricted to a branch).}
+\ucflowhead
+\ucstep{1}{Staff}{Open the order status screen.}
+\ucstep{2}{System}{Display the branch's orders with their current status.}
+\ucstep{3}{Staff}{Select a preparing order and choose ``ready''.}
+\ucstep{4}{System}{Check that the order belongs to the branch and that the transition is allowed.}
+\ucstep{5}{System}{Update the order status and record the status history and an audit log entry.}
+\ucstep{6}{System}{Notify the member, if any; for a delivery order, create a delivery record awaiting shipper assignment.}
+\ucstep{7}{System}{Display the updated order.}
+\ucflowend
+\ucalthead
+\ucalt{A1}{3}{Staff cancels an order that is still preparing.}{Steps 4--5 apply; the order and its payment status become cancelled and no notification is sent. The flow continues at step 7.}
+\ucalt{A2}{3}{Staff completes a ready pickup order.}{Steps 4--5 apply; the system records the payment as paid and, at the extension point \emph{Award Loyalty Points}, credits the member's points once. The flow continues at step 7.}
+\ucalt{E1}{4}{The transition is not allowed, e.g. completing a delivery order or changing a completed or cancelled order.}{The system shows ``Invalid status transition''; Staff chooses another action (step 3).}
+\ucalt{E2}{4}{The order belongs to another branch.}{Access is denied and the use case ends.}
+\ucflowend
+\ucrow{Postconditions}{The order has a new status and a status history entry. A ready delivery order has a delivery record awaiting assignment (UC009); a completed pickup order is paid and, for a member, its points are credited.}
+\ucrow{Business Rules}{Allowed transitions: preparing $\rightarrow$ ready or cancelled; ready $\rightarrow$ completed for pickup orders only. Delivery orders are completed through UC005. Points are credited once per order and exclude delivery fees and free items.}
+\end{usecase}

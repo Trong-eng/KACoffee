@@ -1,0 +1,23 @@
+\begin{usecase}{UC004}{Manage Discount Codes}
+\ucrow{Actor}{Admin}
+\ucrow{Usage}{Allow the administrator to review the existing discount codes and create a new code that customers and staff can apply to orders.}
+\ucrow{Activation Event}{The Admin opens the ``Promotions'' (discount codes) page.}
+\ucrow{Preconditions}{The Admin is signed in with the admin role. To restrict a code by rank, the membership ranks exist.}
+\ucflowhead
+\ucstep{1}{Admin}{Open the discount codes page.}
+\ucstep{2}{System}{Display the list of existing codes and the creation form with the available membership ranks.}
+\ucstep{3}{Admin}{Enter the code, an optional description, the discount type (percentage or fixed VND amount), the value, an optional minimum order value and the eligible ranks, if any.}
+\ucstep{4}{Admin}{Submit the form.}
+\ucstep{5}{System}{Normalise the code (trimmed, upper case), validate the fields and check that the code is unique.}
+\ucstep{6}{System}{Save the active discount code together with its rank eligibility links.}
+\ucstep{7}{System}{Show a success message, refresh the list and reset the form.}
+\ucflowend
+\ucalthead
+\ucalt{A1}{3}{No rank is selected.}{The code is created without a rank restriction.}
+\ucalt{A2}{3}{The Admin leaves the page.}{The use case ends and no code is created.}
+\ucalt{E1}{5}{The code already exists.}{The system shows ``Discount code already exists''; the Admin changes the code (step 3).}
+\ucalt{E2}{5}{Values are invalid, e.g. a value below 1 or a code shorter than 3 characters.}{The system shows validation messages; the Admin corrects the form (step 3).}
+\ucflowend
+\ucrow{Postconditions}{Success: a new discount code exists with the active state and zero or more eligible ranks, and can be applied in UC002 and UC003. Failure: no code is created.}
+\ucrow{Business Rules}{Percentage discount = subtotal $\times$ value / 100; fixed discount = value, never exceeding the item subtotal. A code applies only if it is active, within its optional validity dates, the minimum order value is met and the member's rank is eligible (no ranks configured means no rank restriction). Validity dates, the active flag and later edits are supported by the backend API but are not exposed on the current admin screen; the form always creates an active code.}
+\end{usecase}
