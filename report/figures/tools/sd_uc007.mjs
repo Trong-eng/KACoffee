@@ -18,7 +18,7 @@ export default function () {
   s.opt("the current page is protected", () => {
     s.call("ses", "pg", "sessionEnded()");
     s.self("pg", "redirectToSignIn()");
-    s.ret("pg", "ses", "");
+    s.ret("pg", "ses", "redirected");
   });
   s.ret("ses", "hdr", "session cleared");
   s.ret("hdr", "u", "signed-out header");

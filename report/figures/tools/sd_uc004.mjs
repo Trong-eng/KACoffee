@@ -39,7 +39,7 @@ export default function () {
           s.opt("ranks selected", () => s.callRet("ctl", "dc", "addEligibleRanks(ranks)", "links"));
           s.ret("ctl", "ui", "created code");
           s.self("ui", "refreshListAndResetForm()");
-          s.ret("ui", "a", "success message");
+          s.ret("ui", "a", "updated list, empty form");
         }],
       );
     }],

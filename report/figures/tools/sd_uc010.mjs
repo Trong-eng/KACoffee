@@ -22,6 +22,7 @@ export default function () {
   s.ret("ui", "st", "exchange form");
   s.call("st", "ui", "submit(exchangeData)");
   s.call("ui", "ctl", "processExchange(request)");
+  s.self("ctl", "checkMultipleOfFive(bottles)");
   s.callRet("ctl", "pr", "find(productId)", "product");
   s.opt("phone number entered", () => s.callRet("ctl", "cus", "findActiveByPhone(phone)", "customer | null"));
   s.alt(

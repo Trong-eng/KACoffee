@@ -22,21 +22,26 @@ export default function () {
   s.call("m", "ui", "assign(delivery, shipper)");
   s.call("ui", "ctl", "assignShipper(deliveryId, shipperId)");
   s.callRet("ctl", "del", "find(deliveryId)", "delivery, order");
-  s.callRet("ctl", "emp", "find(shipperId)", "employee");
   s.alt(
     ["other branch or order not a ready delivery", () => {
       s.ret("ctl", "ui", "error: reason", { end: false });
       s.ret("ui", "m", "show error", { end: false });
     }],
-    ["not an active shipper of the branch", () => {
-      s.ret("ctl", "ui", "error: invalid shipper", { end: false });
-      s.ret("ui", "m", "choose another shipper", { end: false });
-    }],
-    ["checks passed", () => {
-      s.callRet("ctl", "del", "assign(shipper)", "assigned");
-      s.callRet("ctl", "aud", "record(assignment)", "entry");
-      s.ret("ctl", "ui", "updated delivery");
-      s.ret("ui", "m", "updated delivery");
+    ["delivery can be assigned", () => {
+      s.callRet("ctl", "emp", "find(shipperId)", "employee");
+      s.alt(
+        ["not an active shipper of the branch", () => {
+          s.ret("ctl", "ui", "error: invalid shipper", { end: false });
+          s.ret("ui", "m", "choose another shipper", { end: false });
+        }],
+        ["shipper valid", () => {
+          s.callRet("ctl", "del", "assign(shipper)", "assigned");
+          s.callRet("ctl", "del", "addStatusHistory(assigned)", "history");
+          s.callRet("ctl", "aud", "record(assignment)", "entry");
+          s.ret("ctl", "ui", "updated delivery");
+          s.ret("ui", "m", "updated delivery");
+        }],
+      );
     }],
   );
   return s.finish();

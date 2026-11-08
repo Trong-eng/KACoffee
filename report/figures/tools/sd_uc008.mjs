@@ -37,11 +37,14 @@ export default function () {
         ["newStatus = ready", () => {
           s.callRet("ctl", "ord", "setStatus(ready)", "updated");
           s.opt("order has a member", () => s.callRet("ctl", "ntf", "createOrderReady(order)", "notification"));
-          s.opt("delivery order", () => s.callRet("ctl", "del", "create(order, pending)", "delivery"));
+          s.opt("delivery order", () => {
+            s.callRet("ctl", "del", "create(order, pending)", "delivery");
+            s.callRet("ctl", "aud", "record(deliveryCreated)", "entry");
+          });
         }],
         ["newStatus = completed (pickup)", () => {
           s.callRet("ctl", "ord", "complete()", "completed, paid");
-          s.ref("Award Loyalty Points (UC025)", ["ctl"]);
+          s.ref("Award Loyalty Points (UC025)\n(order)", ["ctl"]);
         }],
         ["newStatus = cancelled", () => s.callRet("ctl", "ord", "cancel()", "cancelled")],
       );

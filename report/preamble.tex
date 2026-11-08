@@ -109,7 +109,8 @@
   \hline
   \textbf{Use Case Code} & #1 & \textbf{Use Case Name} & #2 \\* \hline
 }{%
-  \end{longtable}
+  \end{longtable}%
+  \addtocounter{table}{-1}% uncaptioned spec tables must not consume table numbers
 }
 % A full-width row: \ucrow{Actor}{Guest}
 \newcommand{\ucrow}[2]{\textbf{#1} & \multicolumn{3}{L{\ucspanw}|}{#2} \\ \hline}

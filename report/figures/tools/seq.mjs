@@ -312,14 +312,15 @@ export class Sequence {
   // interaction use covering the given parts
   ref(label, ids) {
     const xs = ids.map((i) => this.P(i).x);
-    const w = Math.max(Math.max(...xs) - Math.min(...xs) + 68, textW(label) + 40);
+    const lines = String(label).split("\n");
+    const w = Math.max(Math.max(...xs) - Math.min(...xs) + 68, Math.max(...lines.map((l) => textW(l))) + 40);
     const x0 = (Math.max(...xs) + Math.min(...xs)) / 2 - w / 2;
-    const y0 = this.y + 6, y1 = y0 + 42;
+    const y0 = this.y + 6, y1 = y0 + 29 + LINE * lines.length;
     const f = { op: "ref", ref: true, x0, x1: x0 + w, y0, y1, seps: [], guards: [], tagW: textW("ref") * 1.15 + 24 };
     this.frames.push(f);
     this.touch(f.x0, f.x1);
     this.text("tag", "ref", x0 + 4, y0 + 1, "north west", f, { track: false, bold: true });
-    this.text("refl", label, (f.x0 + f.x1) / 2, y0 + 27, "center", f, { track: false });
+    this.text("refl", label, (f.x0 + f.x1) / 2, y0 + 21 + (LINE * lines.length) / 2, "center", f, { track: false });
     this.y = y1 + 4;
     return this;
   }
@@ -416,7 +417,7 @@ export class Sequence {
       const style = `text;html=1;align=${align};verticalAlign=middle;spacing=0;spacingLeft=1;spacingRight=1;${F}` +
         (t.kind === "head" ? "fontStyle=4;" : "") +
         (t.kind === "msg" || t.kind === "guard" ? "fillColor=#ffffff;" : "fillColor=none;") + "strokeColor=none;";
-      vtx(String(t.label).replace(/"([^"]*)"/g, "“$1”"), b.x, b.y, b.w, b.h, style);
+      vtx(String(t.label).replace(/"([^"]*)"/g, "“$1”").replace(/\n/g, "<br>"), b.x, b.y, b.w, b.h, style);
     }
     return `<mxfile host="drawio"><diagram id="${esc(this.name)}" name="${esc(this.name)}">` +
       `<mxGraphModel dx="1200" dy="900" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="0" pageScale="1" math="0" shadow="0"><root>` +

@@ -10,8 +10,9 @@ export default function () {
       { id: "cus", kind: "entity", name: "Customer" },
       { id: "rank", kind: "entity", name: "MembershipRank" },
       { id: "ntf", kind: "entity", name: "Notification" },
+      { id: "ord", kind: "entity", name: "Order" },
     ],
-    gaps: [170, 120, 120, 110],
+    gaps: [170, 120, 120, 110, 100],
     left: 190, gate: 160,
   });
   s.gateCall("lc", "awardPoints(order)");
@@ -24,6 +25,7 @@ export default function () {
       s.callRet("lc", "cus", "setRank(rank)", "updated");
       s.callRet("lc", "ntf", "createRankUp(customer)", "notification");
     });
+    s.callRet("lc", "ord", "markPointsAwarded()", "updated");
   });
   s.gateRet("lc", "done");
   return s.finish();
