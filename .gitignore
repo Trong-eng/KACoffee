@@ -49,3 +49,6 @@ report/figures/png/check.json
 
 # Course template, reference only (not part of the deliverable)
 report/Example_Report.pdf
+
+# Internal review notes (kept locally, not part of the submission)
+report/reviews/
