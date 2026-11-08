@@ -33,10 +33,10 @@ export default function () {
   s.call("ui", "ctl", "placeOrder(orderRequest)");
   s.callRet("ctl", "br", "find(branchId)", "branch | null");
   s.callRet("ctl", "pr", "findOnline(productIds)", "products");
-  s.self("ctl", "checkItems()");
+  s.self("ctl", "checkItemsAndCity()");
   s.self("ctl", "calculatePrices()");
   s.opt("discount code kept", () => s.ref("Validate Discount Code (UC023)\n(code, customer, subtotal)", ["ctl"]));
-  s.self("ctl", "checkCityAndAddFee()");
+  s.self("ctl", "addDeliveryFee()");
   s.alt(
     ["a check failed", () => {
       s.ret("ctl", "ui", "error: reason", { end: false });

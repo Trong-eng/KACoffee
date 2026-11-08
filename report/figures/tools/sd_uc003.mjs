@@ -50,8 +50,8 @@ export default function () {
       s.callRet("ctl", "ord", "addStatusHistory(created)", "history");
       s.opt("discount applied", () => s.callRet("ctl", "dc", "recordUsage(customer, order)", "usage"));
       s.callRet("ctl", "aud", "record(orderCreated)", "entry");
-      s.ret("ctl", "ui", "created order");
-      s.ret("ui", "st", "success notice, cleared lines");
+      s.ret("ctl", "ui", "order, discount, total");
+      s.ret("ui", "st", "created order, discount, total");
     }],
   );
   return s.finish();
