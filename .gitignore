@@ -46,3 +46,6 @@ report/*.blg
 report/figures/**/*.bkp
 report/figures/**/.$*
 report/figures/png/check.json
+
+# Course template, reference only (not part of the deliverable)
+report/Example_Report.pdf

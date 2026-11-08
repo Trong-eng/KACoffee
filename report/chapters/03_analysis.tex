@@ -103,58 +103,140 @@ Each activity diagram uses swimlanes to show who performs each action. The left 
 \subsubsection{Guest's and Common Use Cases}
 
 \paragraph{UC001: Register as Customer}
-The Guest fills out the form and the system validates the data and checks the phone number; both invalid data and a duplicate phone number loop back to the form, while a valid registration ends with the signed-in member area.
 \diagram[0.62]{AD-UC001}{Activity diagram of UC001 Register as Customer}{fig:ad-uc001}{0.9}
 
 \clearpage
 \paragraph{UC006: Log In}
-The user submits credentials on the sign-in page of their group; invalid credentials loop back to the form, and a successful sign-in branches to the work area of the user's role.
 \diagram{AD-UC006}{Activity diagram of UC006 Log In}{fig:ad-uc006}{0.9}
 
 \clearpage
 \paragraph{UC007: Log Out}
-The system clears the stored session in the browser and shows the signed-out interface; protected pages redirect to the sign-in page.
 \diagram{AD-UC007}{Activity diagram of UC007 Log Out}{fig:ad-uc007}{0.85}
 
 \clearpage
 \subsubsection{Customer's Use Cases}
 
 \paragraph{UC002: Place Online Order}
-The diagram branches on the fulfilment method and on whether a discount code is entered, and shows the validation of the branch, products and delivery city before the order is recorded. A rejected order returns the Customer to the checkout form, where the branch, address, discount code or cart can be corrected (E2--E5).
 \diagram{AD-UC002}{Activity diagram of UC002 Place Online Order}{fig:ad-uc002}{1.0}
 
 \clearpage
 \subsubsection{Staff's Use Cases}
 
 \paragraph{UC003: Create Staff-Assisted Order}
-The customer or caller states the order, Staff enters it on the POS screen, and the system looks up the member, looping back when the phone number is not found, and validates the order; non-members skip the lookup.
 \diagram{AD-UC003}{Activity diagram of UC003 Create Staff-Assisted Order}{fig:ad-uc003}{1.0}
 
 \clearpage
 \paragraph{UC008: Update Store Order Status}
-The system checks the branch and the transition (an order of another branch ends the activity, a disallowed transition returns to the selection), then branches on the new status: ready (with a delivery record for delivery orders), completed for pickup orders only (with payment and points) or cancelled.
 \diagram{AD-UC008}{Activity diagram of UC008 Update Store Order Status}{fig:ad-uc008}{1.0}
 
 \clearpage
 \paragraph{UC010: Process Bottle Exchange}
-Staff records the returned bottles and the reward product; the system checks the quantity, product and optional member before recording the exchange.
 \diagram{AD-UC010}{Activity diagram of UC010 Process Bottle Exchange}{fig:ad-uc010}{1.0}
 
 \clearpage
 \subsubsection{Shipper's Use Cases}
 
 \paragraph{UC005: Update Delivery Status}
-The Shipper moves the delivery through pickup and delivery; the outcome decision leads either to completing the order and awarding points or to recording a failed delivery, which can also be reported before pickup or during delivery.
 \diagram{AD-UC005}{Activity diagram of UC005 Update Delivery Status}{fig:ad-uc005}{1.0}
 
 \clearpage
 \subsubsection{Manager's and Admin's Use Cases}
 
 \paragraph{UC009: Assign Delivery}
-The Manager selects a delivery and a shipper; the system checks the order and the shipper's branch before recording the assignment.
 \diagram{AD-UC009}{Activity diagram of UC009 Assign Delivery}{fig:ad-uc009}{0.9}
 
 \clearpage
 \paragraph{UC004: Manage Discount Codes}
-The Admin fills out the creation form; duplicate or invalid codes loop back to the form, and a valid code is saved with its eligible ranks or, when no rank is selected, without a rank restriction.
 \diagram{AD-UC004}{Activity diagram of UC004 Manage Discount Codes}{fig:ad-uc004}{0.9}
+
+\clearpage
+\subsection{Sequence Diagram}\label{sec:sequence}
+
+The sequence diagrams show, for each use case specified in Section~\ref{sec:uc-details}, which objects take part and in which order they exchange messages. They are analysis-level diagrams: the participants are analysis classes rather than concrete source files, and each class carries one of the three stereotypes of the robustness model.
+
+\begin{itemize}
+  \item \textbf{Boundary} objects are the screens through which an actor works with the system, such as the checkout page or the POS order screen.
+  \item \textbf{Control} objects carry the logic of one use case. Each use case has its own controller, which checks the request, coordinates the entity objects and returns the result to the boundary.
+  \item \textbf{Entity} objects hold the data that the system keeps, such as customers, orders, deliveries and discount codes.
+\end{itemize}
+
+The actor only talks to a boundary object, and a boundary object only talks to its controller; entities are reached through the controller. Each diagram is framed and tagged with the code of its use case. Solid arrows with a filled head are calls and dashed arrows are replies, read from top to bottom. Activation bars show when an object is working; the actor stays active for the whole interaction. Combined fragments model the alternative and exception flows of the use case tables: \texttt{alt} for mutually exclusive branches, \texttt{opt} for an optional step and \texttt{loop} for repeated actions. A \texttt{ref} fragment points to the diagram of an extending use case, so that discount validation (UC023), member lookup (UC024) and the awarding of loyalty points (UC025) are drawn once and reused. Participants who never use the system directly, such as the store customer in UC003 and UC010, are left out because they exchange no messages with it.
+
+Table~\ref{tab:analysis-classes} lists the analysis classes used in the diagrams.
+
+\begin{longtable}{|L{2.4cm}|L{12.2cm}|}
+  \caption{Analysis classes in the sequence diagrams}\label{tab:analysis-classes}\\
+  \hline
+  \textbf{Stereotype} & \textbf{Classes} \\ \hline
+  \endfirsthead
+  \hline
+  \textbf{Stereotype} & \textbf{Classes} \\ \hline
+  \endhead
+  Boundary & RegistrationPage, LoginPage, AppHeader, ProtectedPage, CheckoutPage, POSOrderScreen, OrderStatusScreen, BottleExchangeScreen, ShipperDeliveryScreen, DeliveryBoard, DiscountCodePage \\ \hline
+  Control & RegisterController, LoginController, SessionController, PlaceOrderController, StaffOrderController, OrderStatusController, BottleExchangeController, DeliveryStatusController, AssignDeliveryController, DiscountCodeController, DiscountValidator, MemberLookupController, LoyaltyController \\ \hline
+  Entity & Customer, Employee, MembershipRank, RefreshToken, Notification, Branch, Product, Order, Delivery, DiscountCode, PointLedger, BottleExchange, AuditLog \\ \hline
+\end{longtable}
+
+\subsubsection{Guest's and Common Use Cases}
+
+\paragraph{UC001: Register as Customer}
+\diagram[0.86]{SD-UC001}{Sequence diagram of UC001 Register as Customer}{fig:sd-uc001}{1.0}
+
+\clearpage
+\paragraph{UC006: Log In}
+\diagram[0.86]{SD-UC006}{Sequence diagram of UC006 Log In}{fig:sd-uc006}{1.0}
+
+\clearpage
+\paragraph{UC007: Log Out}
+\diagram[0.86]{SD-UC007}{Sequence diagram of UC007 Log Out}{fig:sd-uc007}{0.85}
+
+\clearpage
+\subsubsection{Customer's Use Cases}
+
+\paragraph{UC002: Place Online Order}
+\diagram[0.85]{SD-UC002}{Sequence diagram of UC002 Place Online Order}{fig:sd-uc002}{1.0}
+
+\clearpage
+\subsubsection{Staff's Use Cases}
+
+\paragraph{UC003: Create Staff-Assisted Order}
+\diagram[0.85]{SD-UC003}{Sequence diagram of UC003 Create Staff-Assisted Order}{fig:sd-uc003}{1.0}
+
+\clearpage
+\paragraph{UC008: Update Store Order Status}
+\diagram[0.85]{SD-UC008}{Sequence diagram of UC008 Update Store Order Status}{fig:sd-uc008}{1.0}
+
+\clearpage
+\paragraph{UC010: Process Bottle Exchange}
+\diagram[0.86]{SD-UC010}{Sequence diagram of UC010 Process Bottle Exchange}{fig:sd-uc010}{1.0}
+
+\clearpage
+\subsubsection{Shipper's Use Cases}
+
+\paragraph{UC005: Update Delivery Status}
+\diagram[0.85]{SD-UC005}{Sequence diagram of UC005 Update Delivery Status}{fig:sd-uc005}{1.0}
+
+\clearpage
+\subsubsection{Manager's and Admin's Use Cases}
+
+\paragraph{UC009: Assign Delivery}
+\diagram[0.86]{SD-UC009}{Sequence diagram of UC009 Assign Delivery}{fig:sd-uc009}{1.0}
+
+\clearpage
+\paragraph{UC004: Manage Discount Codes}
+\diagram[0.9]{SD-UC004}{Sequence diagram of UC004 Manage Discount Codes}{fig:sd-uc004}{1.0}
+
+\clearpage
+\subsubsection{Shared Extension Use Cases}
+
+These three diagrams are referenced by the \texttt{ref} fragments above. The incoming message enters through a gate on the frame, because the caller is the controller of the base use case.
+
+\paragraph{UC023: Validate Discount Code}
+\diagram[0.6]{SD-UC023}{Sequence diagram of UC023 Validate Discount Code}{fig:sd-uc023}{0.75}
+
+\clearpage
+\paragraph{UC024: Look Up Member}
+\diagram[0.4]{SD-UC024}{Sequence diagram of UC024 Look Up Member}{fig:sd-uc024}{0.55}
+
+\paragraph{UC025: Award Loyalty Points}
+\diagram[0.6]{SD-UC025}{Sequence diagram of UC025 Award Loyalty Points}{fig:sd-uc025}{0.92}
